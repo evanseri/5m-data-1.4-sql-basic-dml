@@ -24,7 +24,7 @@ Select the minimum and maximum price per sqm of all the flats.
 FROM claim
 JOIN car ON claim.car_id = car.id;
 
-### Question 2
+**### Question 2**
 
 Select the average price per sqm for flats in each town.
 
