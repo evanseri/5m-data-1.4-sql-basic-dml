@@ -31,6 +31,12 @@ JOIN car ON claim.car_id = car.id;
 Select the average price per sqm for flats in each town.
 
 ```sql
+SELECT 
+    c.id,
+    c.car_id,
+    c.travel_time,
+    SUM(c.travel_time) OVER (PARTITION BY c.car_id ORDER BY c.id) AS running_total
+FROM claim c;
 
 ```
 
@@ -44,6 +50,26 @@ Categorize flats into price ranges and count how many flats fall into each categ
   Show the counts in descending order.
 
 ```sql
+WITH CarResaleValues AS (
+    SELECT 
+        car_use,
+        resale_value
+    FROM car
+),
+AverageResale AS (
+    SELECT 
+        car_use,
+        AVG(resale_value) AS avg_resale_value
+    FROM CarResaleValues
+    GROUP BY car_use
+)
+SELECT 
+    c.id,
+    c.resale_value,
+    c.car_use
+FROM car c
+JOIN AverageResale a ON c.car_use = a.car_use
+WHERE c.resale_value < a.avg_resale_value;
 
 ```
 
@@ -52,7 +78,12 @@ Categorize flats into price ranges and count how many flats fall into each categ
 Count the number of flats sold in each town during the first quarter of 2017 (January to March).
 
 ```sql
-
+SELECT 
+    town,
+    COUNT(*) AS flats_sold
+FROM flats_sale
+WHERE sale_date >= '2017-01-01' AND sale_date <= '2017-03-31'
+GROUP BY town;
 ```
 
 ## Submission
